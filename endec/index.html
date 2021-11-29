@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Collection of BMP endecs</title>
+        <!--<meta charset="UTF-16">-->
+        <script src="endecs.js"></script>
+        <link rel="stylesheet" href="../main.css">
+        <style>
+            div {width: 50%;}
+            p, textarea {width: 100%;}
+            p {margin: 0px;}
+            button {width: max-content; flex-shrink: 0;}
+            .flexbox {display: flex; flex-direction: row; width: 100%}
+            .flex-item {padding: 3px; margin: 2px; border: 1px solid black; background-color: #bbb;}
+        </style>
+    </head>
+    <body>
+        <h1>Collection of BMP endecs</h1>
+        <p>These encodes non-BMP glyphs into BMP characters, and vice versa.</p>
+        <h2>Convert!</h2>
+        <label for="endec-select">Encoding method:</label>
+        <select name="endec-select" id="endec-select"></select> 
+        <div class="flexbox">
+            <div class="flex-item">
+                <!-- Ugly! -->
+                <div class="flexbox">
+                    <p>Plain text goes here.</p>
+                    <button type="button" onclick="encode()">Re-encode</button> 
+                </div>
+                <textarea id="plain" name="plain" placeholder="Plain text" oninput="encode()" rows="10"></textarea>
+            </div>
+            <div class="flex-item">
+                <!-- Ugly! -->
+                <div class="flexbox">
+                    <p>Encoded text goes here.</p>
+                    <button type="button" onclick="decode()">Re-decode</button> 
+                </div>
+                <textarea id="coded" name="coded" placeholder="Coded text" oninput="decode()" rows="10"></textarea>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
