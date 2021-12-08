@@ -216,3 +216,102 @@ five15 = {
         return out;
     }
 }
+
+bbbmpe = {
+    name: "BBBMPE",
+    // Ported from solitare's endec in https://tbgforums.com/forums/viewtopic.php?pid=597591#p597591
+    encode: function(input){
+        var toast = "";
+        var pa = true;
+        for (var ore of [...input]) {
+            var bar = ore.codePointAt().toString(16);
+            if (bar.length < 5){
+                if (toast == "" || !pa) toast += String.fromCodePoint(parseInt(bar, 16));
+                else toast += `ӏ${String.fromCodePoint(parseInt(bar))}`;
+                pa = false;
+            } else if (bar.length > 5) {
+                pa = true;
+                let spam = String.fromCodePoint(parseInt(bar.slice(2,4), 16) + 10240);
+                let ham = String.fromCodePoint(parseInt(bar.slice(4,6), 16) + 10240);
+                let arrow = String.fromCodePoint(parseInt(bar.slice(0,2) ,16) + 8592);
+                toast += `ӏ${arrow}${spam}${ham}`;
+            } else {
+                pa = true;
+                let spam = String.fromCodePoint(parseInt(bar.slice(1,3), 16) + 10240);
+                let ham = String.fromCodePoint(parseInt(bar.slice(3,5), 16) + 10240);
+                let arrow = String.fromCodePoint(parseInt(bar[0], 16) + 8592);
+                toast += `ӏ${arrow}${spam}${ham}`;
+            }
+        }
+        return toast;
+    },
+    decode: function(input){
+        var foo = input.split("ӏ");
+        var toast = "";
+        for (var bring of foo){
+            if (bring.length > 3 || bring.length < 3) toast += bring;
+            else if (bring.includes("↠")) {
+                let eggs = bring[1].codePointAt().toString(16).slice(2,4);
+                let baz = bring[2].codePointAt().toString(16).slice(2,4);
+                toast += String.fromCodePoint(parseInt(`10${eggs}${baz}`, 16))
+            }
+            else {
+                let home = (bring[0].codePointAt() - 8592).toString(16);
+                let eggs = bring[1].codePointAt().toString(16).slice(2,4)
+                let baz = bring[2].codePointAt().toString(16).slice(2,4)
+                toast += String.fromCodePoint(parseInt(`${home}${eggs}${baz}`, 16))
+            }
+        }
+        return toast;
+    }
+}
+
+smiley = {
+    name: "Smiley Plane",
+    encode: function (input) {
+        var smiley = [":) ", ":| ", ":( ", ":o ", ":D ", ":lol: ", ":/ ", "D:< ", ";) ", ":P ", ":roll: ", "B) "];
+        var replace = "0123456789ab";
+
+        // replace [smiley] with \[smiley]
+        var pattern = /\[((?::\)|:\||:\(|:o|:D|:lol:|:\/|D:<|;\)|:P|:roll:|B\)| )+)\]/g;
+        var result = input.replace(pattern, "\\[$1]");
+
+        function toSmiley(m, str) {
+	        var result = "";
+	        for (var x = 0; x < str.length; x += 2){
+		        var high = str.charCodeAt(x) - 0xD800;
+		        var low = str.charCodeAt(x + 1) - 0xDC00;
+         		var combined = 0x10000 + high * 0x400 + low;
+		        var chr = ("000000"+combined.toString(12,9)).slice(-6);
+		        for (var c of chr) result += smiley[replace.indexOf(c)];
+	        }
+	        return "[ " + result + "]";
+        }
+
+        // replace non-BMP characters
+        pattern = /((?:[\uD800-\uDBFF][\uDC00-\uDFFF])+)/g;
+        result = result.replace(pattern,toSmiley);
+        return result;
+    },
+    decode: function(input) {
+        smiley = [/:\) /g, /:\| /g, /:\( /g, /:o /g, /:D /g, /:lol: /g, /:\/ /g, /D:< /g, /;\) /g, /:P /g, /:roll: /g, /B\) /g];
+        replace = "0123456789ab";
+
+        function fromSmiley(m, str) {
+	        let result = "";
+	        let doz = str;
+	        for (var i in smiley) doz = doz.replace(smiley[i], replace[i]);
+	        for (var x = 0; x < doz.length; x += 6) result += String.fromCodePoint(parseInt(doz.slice(x, x + 6), 12));
+	        return result;
+        }
+
+        // replace [smiley] with non-BMP characters
+        pattern = /(?<!\\)\[ ((?::\)|:\||:\(|:o|:D|:lol:|:\/|D:<|;\)|:P|:roll:|B\)| )+)\]/g;
+        result = input.replace(pattern,fromSmiley);
+
+        // replace \[smiley] with [smiley]
+        var pattern = /\\\[((?::\)|:\||:\(|:o|:D|:lol:|:\/|D:<|;\)|:P|:roll:|B\)| )+)\]/g;
+        var result = result.replace(pattern, "[$1]");
+        return result;
+    }
+}
