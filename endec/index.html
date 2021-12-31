@@ -5,32 +5,63 @@
         <script src="endecs.js"></script>
         <link rel="stylesheet" href="../main.css">
         <style>
-            div {width: 50%;}
-            p, textarea {width: 100%;}
-            p {margin: 0px;}
-            button {width: max-content; flex-shrink: 0;}
-            .flexbox {display: flex; flex-direction: row; width: 100%}
-            .flex-item {padding: 3px; margin: 2px; border: 1px solid black; background-color: #bbb;}
+            p, textarea {
+                width: 100%;
+            }
+            p {
+                margin: 0px;
+            }
+            button {
+                width: max-content; 
+                flex-shrink: 0;
+            }
+            .flexbox {
+                display: flex; 
+                flex-direction: row; 
+                flex-wrap: nowrap;
+                width: 100%;
+            }
+            .flex-item {
+                padding: 3px; 
+                margin: 2px; 
+                border: 2px solid black; 
+                background-color: #bbb; 
+                flex: 50%;
+            }
+            .flex-item-header {
+                display: flex; 
+                flex-direction: row; 
+                flex-wrap: none;
+            }
+            /* responsive */
+            @media (max-width: 120vh) {
+                  .flexbox {
+                        flex-direction: column;
+                        flex-wrap: wrap;
+                  }
+                  .flex-item{
+                        flex: 100%;
+                  }
+            }
         </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <h1>Collection of BMP endecs</h1>
         <p>These encodes non-BMP glyphs into BMP characters, and vice versa.</p>
         <h2>Convert!</h2>
         <label for="endec-select">Encoding method:</label>
-        <select name="endec-select" id="endec-select"></select> 
+        <select name="endec-select" id="endec-select"></select> <!-- Will be added in -->
         <div class="flexbox">
             <div class="flex-item">
-                <!-- Ugly! -->
-                <div class="flexbox">
+                <div class="flex-item-header">
                     <p>Plain text goes here.</p>
                     <button type="button" onclick="encode()">Re-encode</button> 
                 </div>
                 <textarea id="plain" name="plain" placeholder="Plain text" oninput="encode()" rows="10"></textarea>
             </div>
             <div class="flex-item">
-                <!-- Ugly! -->
-                <div class="flexbox">
+                <div class="flex-item-header">
                     <p>Encoded text goes here.</p>
                     <button type="button" onclick="decode()">Re-decode</button> 
                 </div>

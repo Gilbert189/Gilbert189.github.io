@@ -1,3 +1,45 @@
 html {
-    font-family: sans-serif; background-color: #aaf;
+    font-family: sans-serif; 
+    background-color: #6af;
+}
+
+* {
+    border-width: 1px;
+}
+
+/* Responsive font size */
+
+h1 {
+    font-size:2.5em;
+}
+
+h2 {
+    font-size:2em;
+}
+
+h3{
+    font-size:1.5em;
+}
+
+h4, h5, h6, p, textarea, select, label, button, a, option {
+    font-size:1em;
+}
+
+@media (max-width: 120vh) { /* Mobile */
+    /* Use vh instead of em*/
+    h1 {
+        font-size:7vw;
+    }
+
+    h2 {
+        font-size:6vw;
+    }
+
+    h3{
+        font-size:5vw;
+    }
+
+    h4, h5, h6, p, textarea, select, label, button, a, option {
+        font-size:4vw;
+    }
 }
