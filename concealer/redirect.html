@@ -95,7 +95,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
                   link = link.slice(KEY_SIZE);
                   redirect(decrypt(key, link));
                 }
-              }
+              } else redirect(link);
             } catch (e) {
               if (!(e instanceof DOMException)) throw e;
               console.log(`Link is raw`);
