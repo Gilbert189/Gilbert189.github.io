@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>CSS tester</title>
+        <link rel="stylesheet" href="main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>CSS tester</h1>
+        <h2>Heading 2</h2>
+        <h3>Heading 3</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum a neque iaculis,
+        blandit diam vitae, mattis elit. Nulla mi nibh, sagittis eget cursus nec, sagittis
+        vitae mi. In blandit, ex vitae hendrerit varius, nunc est sodales velit, in sagittis
+        nisl arcu sed neque. Quisque eget nulla mi. Nam at sapien iaculis, dictum metus eget,
+        efficitur nisi. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque
+        magna dolor, dapibus quis nisi a, condimentum faucibus nibh.</p>
+    </body>
+    <div class="code">
+        <code>$(document).ready(function(){
+    var polish = new function(){
+        this.stack = [];
+        this.number = function(num){
+            if (arguments.length === 0) {
+                return this.stack.pop();
+            }
+            this.stack.push(num); return this;
+        };
+        this.add = function(){
+            this.stack.push(this.stack.pop() + this.stack.pop());
+            return this;
+        };
+        this.pow = function(){
+            this.stack.push(Math.pow(this.stack.pop(), this.stack.pop()));
+            return this;
+        };
+    };
+    
+    $.get('ssRUr' + polish.number(2).number(4).add().number(2).pow().number() + '.txt',
+        function(data){
+            $("#re,img.ed").attr('src', 'data:image/jpeg;base64,' + data);
+        }
+    );
+});</code>
+    </div>
+</html>

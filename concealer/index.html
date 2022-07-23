@@ -1,0 +1,87 @@
+<!-- 
+Link Concealer - A tool to conceal a given link to some extent.
+Written in 2022 by Gilbert189
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+New BSD License (3-clause)
+The Forge module that this website uses is Copyright (c) 2010, Digital Bazaar, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Digital Bazaar, Inc. nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL DIGITAL BAZAAR BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+<html>
+    <head>
+        <title>Link Concealer</title>
+        <link rel="stylesheet" href="../main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/node-forge@1.0.0/dist/forge.min.js"></script>
+        <style>
+            form * {
+                margin: 0.25em 0;
+                border-radius: 0.25em;
+            }
+            input[type="checkbox"] {
+                margin-right: 0.25rem;
+            }
+            form {
+                max-width: 30rem;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Link Concealer</h1>
+        <p>This conceals a given link to some extent.</p>
+        <a href="help.html">Um... help?</a><br>
+        <form action="#" id="form">
+            <label for="link">Link to conceal: </label>
+            <input type="text" name="link" id="link" autocomplete="off" required>
+            <fieldset>
+                <legend>Advanced</legend>
+                <div>
+                    <input type="checkbox" id="unencode" name="unencode" onchange="document.getElementById('encryption').disabled=this.checked">
+                    <label for="unencode" class="unselect">Don't encode the link</label>
+                </div>
+                <fieldset id="encryption">
+                    <legend>Encryption</legend>
+                    <input type="checkbox" id="encrypt" name="encrypt" onchange="document.getElementById('password').disabled=!this.checked" checked>
+                    <label for="encrypt" class="unselect">Encrypt link</label>
+                    <br>
+                    <label for="pass" class="unselect">Password (key will be embedded to link if ommited):</label>
+                    <br>
+                    <input type="text" id="password" autocomplete="off" name="password">
+                </fieldset>
+            </fieldset>
+            <input type="submit" id="generate" name="generate" value="Generate">
+        </form>
+        <div>
+            <p>Generated link:</p>
+            <code id="generated" style="word-break: break-all;">...</code>
+        </div>
+        <script src="script.js"></script>
+        <p><b>Disclaimer:</b> This is not the most secure way to hide links. See the <a href="help.html">help page</a> for more information.</p>
+    </body>
+</html>

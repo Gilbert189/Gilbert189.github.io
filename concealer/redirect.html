@@ -1,0 +1,113 @@
+<!-- 
+Link Concealer - A tool to conceal a given link to some extent.
+Written in 2022 by Gilbert189
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+New BSD License (3-clause)
+The Forge module that this website uses is Copyright (c) 2010, Digital Bazaar, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Digital Bazaar, Inc. nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL DIGITAL BAZAAR BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
+<html>
+    <head>
+        <title>Redirecting...</title>
+        <link rel="stylesheet" href="../main.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/node-forge@1.0.0/dist/forge.min.js"></script>
+        <script>
+          let password = "";
+          const FORM = document.createElement("form");
+          FORM.innerHTML = `<label for="password" class="unselect">Enter password: </label>
+          <input type="password" name="password" id="password" autocomplete="off" required></input>
+          <input type="submit" id="generate" name="generate"></input>`;
+          FORM.action = "#";
+          FORM.addEventListener("submit", (e)=>{e.preventDefault();let key=forge.pkcs5.pbkdf2(document.getElementById("password").value, SALT, 16, KEY_SIZE);redirect(decrypt(key, link));});
+          function redirect(link) {
+            // Check if the link is a data URL
+            if (match = link.match(/data:(.*?)(;base64)?,(.+)/)) {
+              let data = (match[2]?atob:decodeURI)(match[3]);
+              console.log(match, data);
+              let blob = new Blob([data], {type: match[1]});
+              link = URL.createObjectURL(blob);
+            }
+            window.location.replace(link);
+          }
+          let enc = new TextEncoder();
+
+          function decrypt(key, code) {
+            console.log({key, code});
+            let iv = ">4jVia^xSs5a7ky<`1X~2^4xd^G4gLx%nuY82GFS";
+            let decipher = forge.cipher.createDecipher('AES-CBC', key);
+            decipher.start({iv: iv});
+
+            let buffer = forge.util.createBuffer(code, 'raw');
+            decipher.update(buffer);
+            let result = decipher.finish();
+
+            result = decipher.output.bytes();
+            return result;
+          }
+
+          const SALT = "wxwSGInE2SwNJK4Ooj2YnIKdB2z5JhJwdSB7YbEkhgmIUCok8KkkpIY0GFAq2z5BsSTg3hIHwVVhQzNEOULTy3w=";
+          
+          function doStuff() { 
+            console.log(`Ping!`);
+            // Get the string
+            link = window.location.hash.slice(1);
+            // Check if it's a base64 string
+            try {
+              link = atob(link);
+              let mode = link.codePointAt(link.length-1);
+              link = link.slice(0, -1);
+              // Check if the link is encrypted
+              if (mode & 0xC0) {
+                KEY_SIZE = mode & 0x3F;
+                console.log(`Link is encrypted with key size of ${KEY_SIZE}`);
+                // If mode has the 1st bit on, it means that the key is not included
+                if (mode &= 0x80) {
+                  document.body.children[0].replaceWith(FORM);
+                  // The next piece code will be handled by the form.
+                } else {
+                  // Get the key
+                  let key = link.slice(0, KEY_SIZE);
+                  link = link.slice(KEY_SIZE);
+                  redirect(decrypt(key, link));
+                }
+              }
+            } catch (e) {
+              if (!(e instanceof DOMException)) throw e;
+              console.log(`Link is raw`);
+              // If the encoding fails, the string should be raw
+              link = decodeURI(link);
+              redirect(link);
+            }
+          }
+      </script>
+    </head>
+    <body onload="doStuff()">
+        <p>Please wait while you're being redirected...</p>
+        
+    </body>
+</html>
