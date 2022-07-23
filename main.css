@@ -40,11 +40,11 @@ fieldset {
 }
 
 a:link {
-    color: rgb(20 18 196);
+    color: rgb(20, 18, 196);
 }
 
 a:visited {
-    color: rgb(1 0 112);
+    color: rgb(1, 0, 112);
 }
 
 /* Provided here as an option */
